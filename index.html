@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Triangle WebGL</title>
+        <link href="css/style.css" rel="stylesheet">
+        <script id="shader-fs" type="x-shader/x-fragment">
+        	precision mediump float;
+
+            varying vec4 vColor;
+
+        	void main(void) {
+                gl_FragColor = vColor;
+        	}	
+        </script>
+        <script id="shader-vs" type="x-shader/x-vertex">
+        	attribute vec3 vertexPosition;
+            attribute vec4 vertexColor;
+
+        	uniform mat4 gWorld;
+
+            varying vec4 vColor;
+
+  			void main(void) {
+			    gl_Position = gWorld * vec4(vertexPosition, 1.0);
+                vColor = vertexColor;
+			}
+        </script>
+    </head>
+    <body>
+    	<canvas id="webgl-canvas" style="border:none;" width="1366px" height="654px"></canvas>
+        <script type="text/javascript" src="build/main.js"></script>
+    </body>
+</html>

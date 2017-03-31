@@ -69,34 +69,34 @@ let indices = [
 var textureCoords = [
       // Front face
       0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
+      3.0, 0.0,
+      3.0, 3.0,
+      0.0, 3.0,
       // Back face
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
+      3.0, 0.0,
+      3.0, 3.0,
+      0.0, 3.0,
       0.0, 0.0,
       // Top face
-      0.0, 1.0,
+      0.0, 3.0,
       0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
+      3.0, 0.0,
+      3.0, 3.0,
       // Bottom face
-      1.0, 1.0,
-      0.0, 1.0,
+      3.0, 3.0,
+      0.0, 3.0,
       0.0, 0.0,
-      1.0, 0.0,
+      3.0, 0.0,
       // Right face
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
+      3.0, 0.0,
+      3.0, 3.0,
+      0.0, 3.0,
       0.0, 0.0,
       // Left face
       0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
+      3.0, 0.0,
+      3.0, 3.0,
+      0.0, 3.0,
 ];
 
 let texture = new Texture(glContext, 'img/brickwall.png');
@@ -109,7 +109,7 @@ for (let i = 0; i < 1; i++) {
     geometry.addAttribute('textureCoord', new Float32Array(textureCoords), 2);
     geometry.setTexture(texture);
     geometry.setTranslate(0, 0, zTranslate);
-    geometry.setScale(10, 1, 1);
+    geometry.setScale(3, 3, 3);
     renderer.addGeometry(geometry);
 
     zTranslate += 2;
@@ -129,9 +129,9 @@ let floorInd = [
 
 let floorTexInd = [
     0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
+    100.0, 0.0,
+    100.0, 100.0,
+    0.0, 100.0,
 ];
 
 let floorTex = new Texture(glContext, 'img/stone.png');
@@ -181,9 +181,9 @@ document.onkeyup = function(e) {
 
 function handleKeys() {
     if (currentlyPressedKeys[33]) {
-        camera.setPitchRate(0.1);
+        camera.setPitchRate(0.2);
     } else if (currentlyPressedKeys[34]) {
-        camera.setPitchRate(-0.1);
+        camera.setPitchRate(-0.2);
     } else {
         camera.setPitchRate(0);
     }
@@ -191,20 +191,20 @@ function handleKeys() {
 
     if (currentlyPressedKeys[37] || currentlyPressedKeys[65]) {
         // Left cursor key or A
-        camera.setYawRate(0.1);
+        camera.setYawRate(0.2);
     } else if (currentlyPressedKeys[39] || currentlyPressedKeys[68]) {
         // Right cursor key or D
-        camera.setYawRate(-0.1);
+        camera.setYawRate(-0.2);
     } else {
         camera.setYawRate(0);
     }
 
     if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
         // Up cursor key or W
-        camera.setSpeed(0.003);
+        camera.setSpeed(0.05);
     } else if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
         // Down cursor key
-        camera.setSpeed(-0.003);
+        camera.setSpeed(-0.05);
     } else {
         camera.setSpeed(0);
     }

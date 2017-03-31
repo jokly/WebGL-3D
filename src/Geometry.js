@@ -15,6 +15,7 @@ class Geometry {
 
     addAttribute(name, data, itemSize) {
         let attribute = {
+            data: data,
             buffer: null,
             itemSize: itemSize,
             itemsCount: data.length / itemSize,

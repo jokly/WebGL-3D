@@ -5,8 +5,9 @@ class Geometry {
         this.gl = glContext;
 
         this.attributes = {};
-        this.indices = {};
         this.itemsCount = null;
+        this.indices = {};
+        this.texture = null;
 
         this.translate = vec3.create();
     }
@@ -45,6 +46,10 @@ class Geometry {
         this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, indices, this.gl.STATIC_DRAW);
 
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
+    }
+
+    setTexture(texture) {
+        this.texture = texture;
     }
 
     setTranslate(translate) {

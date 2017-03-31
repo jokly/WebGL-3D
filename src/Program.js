@@ -100,21 +100,19 @@ class Program {
     }
 
     getUniformType(value) {
-        if (value instanceof WebGLTexture) {
-            return 'texture';
-        } else if (value instanceof Float32Array) {
-            return value.length + 'fv';
+        if (value instanceof Float32Array) {
+            return 'uniformMatrix' + value.length + 'fv';
         } else if (value instanceof Int32Array) {
-            return value.length + 'iv';
+            return 'uniformMatrix' + value.length + 'iv';
         } else {
-            return '1f';
+            return 'uniformMatrix1f';
         }
     }
 
     updateUniforms() {
         for (let name in this.uniforms) {
             let uniform = this.uniforms[name];
-            let method = this.gl['uniformMatrix' + uniform.type];
+            let method = this.gl[uniform.type];
 
             if (!method) {
                 console.log('Cannot set uniform value, unknown type: ${uniform.type}');

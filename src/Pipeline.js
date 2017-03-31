@@ -26,7 +26,7 @@ class Pipeline {
         mat4.mul(gWorld, this.perspective, this.cameraMatrix);
         mat4.mul(gWorld, gWorld, this.objectMatrix);
 
-        program.setUniform('gWorld', gWorld, '4fv');
+        program.setUniform('gWorld', gWorld, 'uniformMatrix4fv');
     }
 }
 

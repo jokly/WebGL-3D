@@ -16,6 +16,7 @@ class Renderer {
     }
 
     init() {
+        this.gl.enable(this.gl.DEPTH_TEST);
         this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     }
 
@@ -87,6 +88,9 @@ class Renderer {
                 this.gl.bindBuffer(this.gl.ARRAY_BUFFER, attribute.buffer);
                 this.gl.vertexAttribPointer(this.attributesLocations[name], attribute.itemSize, this.gl.FLOAT, false, 0, 0);
             }
+
+            this.gl.activeTexture(this.gl.TEXTURE0);
+            this.gl.bindTexture(this.gl.TEXTURE_2D, geometry.texture.image.texture);
             
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, geometry.indices.buffer);
 

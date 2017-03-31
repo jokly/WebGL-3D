@@ -5,28 +5,30 @@
         <script id="shader-fs" type="x-shader/x-fragment">
         	precision mediump float;
 
-            varying vec4 vColor;
+            varying vec2 vTextureCoord;
+
+            uniform sampler2D uSampler;
 
         	void main(void) {
-                gl_FragColor = vColor;
+                gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
         	}	
         </script>
         <script id="shader-vs" type="x-shader/x-vertex">
         	attribute vec3 vertexPosition;
-            attribute vec4 vertexColor;
+            attribute vec2 textureCoord;
 
         	uniform mat4 gWorld;
 
-            varying vec4 vColor;
+            varying vec2 vTextureCoord;
 
   			void main(void) {
 			    gl_Position = gWorld * vec4(vertexPosition, 1.0);
-                vColor = vertexColor;
+                vTextureCoord = textureCoord;
 			}
         </script>
     </head>
     <body>
-    	<canvas id="webgl-canvas" style="border:none;" width="1366px" height="654px"></canvas>
+    	<canvas id="webgl-canvas" style="border:none;"></canvas>
         <script type="text/javascript" src="build/main.js"></script>
     </body>
 </html>

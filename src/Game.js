@@ -2,6 +2,7 @@ import { vec3 } from 'gl-matrix';
 
 import Program from './Program';
 import Geometry from './Geometry';
+import Texture from './Texture';
 import Renderer from './Renderer';
 import Pipeline from './Pipeline';
 import Camera from './Camera';
@@ -12,7 +13,6 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let glContext = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-glContext.enable(glContext.DEPTH_TEST);
 
 let renderer = new Renderer(glContext, canvas.width, canvas.height);
 
@@ -22,6 +22,7 @@ renderer.setCamera(camera)
 let program = new Program(glContext);
 program.setVertexShader('shader-vs');
 program.setFragmentShader('shader-fs');
+program.setUniform('uSampler', 0,  'uniform1i');
 
 let vertices = [
     // Front face
@@ -65,31 +66,50 @@ let indices = [
     20, 21, 22,   20, 22, 23  // Left face
 ];
 
-let colors = [
-    [1.0, 0.0, 0.0, 1.0],     // Front face
-    [1.0, 1.0, 0.0, 1.0],     // Back face
-    [0.0, 1.0, 0.0, 1.0],     // Top face
-    [1.0, 0.5, 0.5, 1.0],     // Bottom face
-    [1.0, 0.0, 1.0, 1.0],     // Right face
-    [0.0, 0.0, 1.0, 1.0],     // Left face
+var textureCoords = [
+      // Front face
+      0.0, 0.0,
+      1.0, 0.0,
+      1.0, 1.0,
+      0.0, 1.0,
+      // Back face
+      1.0, 0.0,
+      1.0, 1.0,
+      0.0, 1.0,
+      0.0, 0.0,
+      // Top face
+      0.0, 1.0,
+      0.0, 0.0,
+      1.0, 0.0,
+      1.0, 1.0,
+      // Bottom face
+      1.0, 1.0,
+      0.0, 1.0,
+      0.0, 0.0,
+      1.0, 0.0,
+      // Right face
+      1.0, 0.0,
+      1.0, 1.0,
+      0.0, 1.0,
+      0.0, 0.0,
+      // Left face
+      0.0, 0.0,
+      1.0, 0.0,
+      1.0, 1.0,
+      0.0, 1.0,
 ];
-
-let unpackedColors = [];
-for (let i in colors) {
-    let color = colors[i];
-    for (let j = 0; j < 4; j++) {
-        unpackedColors = unpackedColors.concat(color);
-    }
-}
 
 let geometries = [];
 let zTranslate = 0;
+
+let texture = new Texture(glContext, 'img/brickwall.png');
 
 for (let i = 0; i < 3; i++) {
     let geometry = new Geometry(glContext);
     geometry.addAttribute('vertexPosition', new Float32Array(vertices), 3);
     geometry.setIndices(new Uint16Array(indices));
-    geometry.addAttribute('vertexColor', new Float32Array(unpackedColors), 4);
+    geometry.addAttribute('textureCoord', new Float32Array(textureCoords), 2);
+    geometry.setTexture(texture);
     geometry.setTranslate(vec3.fromValues(0, 0, zTranslate));
     renderer.addGeometry(geometry);
 

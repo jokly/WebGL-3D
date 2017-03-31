@@ -102,13 +102,14 @@ var textureCoords = [
 let texture = new Texture(glContext, 'img/brickwall.png');
 
 let zTranslate = 0;
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 1; i++) {
     let geometry = new Geometry(glContext);
     geometry.addAttribute('vertexPosition', new Float32Array(vertices), 3);
     geometry.setIndices(new Uint16Array(indices));
     geometry.addAttribute('textureCoord', new Float32Array(textureCoords), 2);
     geometry.setTexture(texture);
-    geometry.setTranslate(vec3.fromValues(0, 0, zTranslate));
+    geometry.setTranslate(0, 0, zTranslate);
+    geometry.setScale(10, 1, 1);
     renderer.addGeometry(geometry);
 
     zTranslate += 2;
@@ -140,8 +141,8 @@ floor.addAttribute('vertexPosition', new Float32Array(floorVert), 3);
 floor.setIndices(new Uint16Array(floorInd));
 floor.addAttribute('textureCoord', new Float32Array(floorTexInd), 2);
 floor.setTexture(floorTex);
-floor.setTranslate(vec3.fromValues(0, 0, 10));
-floor.setScale(vec3.fromValues(100, 1, 100));
+floor.setTranslate(0, 0, 10);
+floor.setScale(100, 1, 100);
 renderer.addGeometry(floor);
 
 let pipeline = new Pipeline();

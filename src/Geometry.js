@@ -53,16 +53,16 @@ class Geometry {
         this.texture = texture;
     }
 
-    setTranslate(translate) {
-        this.translate = translate;
+    setTranslate(x, y, z) {
+        this.translate = vec3.fromValues(x, y, z);
     }
 
     getTranslate() {
         return this.translate;
     }
 
-    setScale(scale) {
-        this.scale = scale;
+    setScale(x, y, z) {
+        this.scale = vec3.fromValues(x, y, z);
     }
 
     getTransformMatrix() {

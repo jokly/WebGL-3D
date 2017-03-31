@@ -135,21 +135,14 @@ let floorTexInd = [
 
 let floorTex = new Texture(glContext, 'img/stone.png');
 
-zTranslate = -25;
-while (zTranslate <= 25) {
-    let xTranslate = -25;
-    while (xTranslate <= 25) {
-        let floor = new Geometry(glContext);
-        floor.addAttribute('vertexPosition', new Float32Array(floorVert), 3);
-        floor.setIndices(new Uint16Array(floorInd));
-        floor.addAttribute('textureCoord', new Float32Array(floorTexInd), 2);
-        floor.setTexture(floorTex);
-        floor.setTranslate(vec3.fromValues(xTranslate, 0, zTranslate));
-        renderer.addGeometry(floor);
-        xTranslate += 2
-    }
-    zTranslate += 2;
-}
+let floor = new Geometry(glContext);
+floor.addAttribute('vertexPosition', new Float32Array(floorVert), 3);
+floor.setIndices(new Uint16Array(floorInd));
+floor.addAttribute('textureCoord', new Float32Array(floorTexInd), 2);
+floor.setTexture(floorTex);
+floor.setTranslate(vec3.fromValues(0, 0, 10));
+floor.setScale(vec3.fromValues(100, 1, 100));
+renderer.addGeometry(floor);
 
 let pipeline = new Pipeline();
 pipeline.setPerspective(canvas.width, canvas.height);

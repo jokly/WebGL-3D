@@ -10,7 +10,8 @@ class Geometry {
         this.texture = null;
 
         this.translate = vec3.create();
-    }
+        this.scale = vec3.fromValues(1, 1, 1);
+}
 
     addAttribute(name, data, itemSize) {
         let attribute = {
@@ -60,9 +61,14 @@ class Geometry {
         return this.translate;
     }
 
+    setScale(scale) {
+        this.scale = scale;
+    }
+
     getTransformMatrix() {
         let outMat = mat4.create();
         mat4.translate(outMat, outMat, this.translate);
+        mat4.scale(outMat, outMat, this.scale);
 
         return outMat;
     }

@@ -99,11 +99,9 @@ var textureCoords = [
       0.0, 1.0,
 ];
 
-let geometries = [];
-let zTranslate = 0;
-
 let texture = new Texture(glContext, 'img/brickwall.png');
 
+let zTranslate = 0;
 for (let i = 0; i < 3; i++) {
     let geometry = new Geometry(glContext);
     geometry.addAttribute('vertexPosition', new Float32Array(vertices), 3);
@@ -113,6 +111,43 @@ for (let i = 0; i < 3; i++) {
     geometry.setTranslate(vec3.fromValues(0, 0, zTranslate));
     renderer.addGeometry(geometry);
 
+    zTranslate += 2;
+}
+
+let floorVert = [
+    -1.0, -1.0, -1.0,
+    1.0, -1.0, -1.0,
+    1.0, -1.0,  1.0,
+    -1.0, -1.0,  1.0,
+];
+
+let floorInd = [
+    0, 1, 2,
+    0, 2, 3
+];
+
+let floorTexInd = [
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+];
+
+let floorTex = new Texture(glContext, 'img/stone.png');
+
+zTranslate = -25;
+while (zTranslate <= 25) {
+    let xTranslate = -25;
+    while (xTranslate <= 25) {
+        let floor = new Geometry(glContext);
+        floor.addAttribute('vertexPosition', new Float32Array(floorVert), 3);
+        floor.setIndices(new Uint16Array(floorInd));
+        floor.addAttribute('textureCoord', new Float32Array(floorTexInd), 2);
+        floor.setTexture(floorTex);
+        floor.setTranslate(vec3.fromValues(xTranslate, 0, zTranslate));
+        renderer.addGeometry(floor);
+        xTranslate += 2
+    }
     zTranslate += 2;
 }
 

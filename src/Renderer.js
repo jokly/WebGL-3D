@@ -17,7 +17,7 @@ class Renderer {
 
     init() {
         this.gl.enable(this.gl.DEPTH_TEST);
-        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        this.gl.clearColor(0.0, 153.0, 255.0, 1.0);
     }
 
     setProgram(program) {
@@ -38,7 +38,7 @@ class Renderer {
 
             if (this.attributesLocations[name] === -1) {
                 delete this.attributesLocations[name];
-                console.log('Cannot find attribute location: ${name}');
+                console.log('Cannot find attribute location: ' + name);
             }
 
             this.gl.enableVertexAttribArray(this.attributesLocations[name]);

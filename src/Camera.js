@@ -12,7 +12,7 @@ class Camera {
         this.z = z;
 
         this.speed = 0;
-        this.lastTime = 0;
+        this.lastTime = 0;  
 
         this.cameraMatrix = mat4.create();
         

@@ -102,7 +102,7 @@ var textureCoords = [
 let texture = new Texture(glContext, 'img/brickwall.png');
 
 let zTranslate = 0;
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 10; i++) {
     let geometry = new Geometry(glContext);
     geometry.addAttribute('vertexPosition', new Float32Array(vertices), 3);
     geometry.setIndices(new Uint16Array(indices));
@@ -176,7 +176,35 @@ document.onkeydown = function(e) {
 };
 
 document.onkeyup = function(e) {
-    currentlyPressedKeys[e.keyCode] = false;  
+    currentlyPressedKeys[e.keyCode] = false;
+
+    if (e.keyCode == 32) {
+        let block = new Geometry(glContext);
+        block.addAttribute('vertexPosition', new Float32Array(vertices), 3);
+        block.setIndices(new Uint16Array(indices));
+        block.addAttribute('textureCoord', new Float32Array(textureCoords), 2);
+        block.setTexture(texture);
+        let cameraPos = camera.getCoords();
+        let cameraMatrix = camera.getCameraMatrix();
+        let diff = [0, 0, 0];
+
+        if (cameraMatrix[2] > 0.5) {
+            diff[0] = -3;
+        }
+        else if (cameraMatrix[2] < -0.5) {
+            diff[0] = 3;
+        }
+
+        if (cameraMatrix[10] > 0.5) {
+            diff[2] = -3;
+        }
+        else if (cameraMatrix[10] < -0.5) {
+            diff[2] = 3;
+        }
+
+        block.setTranslate(cameraPos.x + diff[0], cameraPos.y + diff[1], cameraPos.z + diff[2]);
+        renderer.addGeometry(block);
+    }
 }
 
 function handleKeys() {

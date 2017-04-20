@@ -12,10 +12,9 @@ class Camera {
         this.z = z;
 
         this.speed = 0;
-        this.lastTime = 0;  
+        this.lastTime = 0;
 
         this.cameraMatrix = mat4.create();
-        
     }
 
     setSpeed(speed) {
@@ -57,7 +56,16 @@ class Camera {
     }
 
     getCameraMatrix() {
+        console.log(this.cameraMatrix);
         return this.cameraMatrix;
+    }
+
+    getCoords() {
+        return {
+            x: this.x,
+            y: this.y,
+            z: this.z
+        }
     }
 }
 

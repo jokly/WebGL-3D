@@ -11,7 +11,7 @@ class Geometry {
 
         this.translate = vec3.create();
         this.scale = vec3.fromValues(1, 1, 1);
-}
+    }
 
     addAttribute(name, data, itemSize) {
         let attribute = {

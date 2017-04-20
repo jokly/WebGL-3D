@@ -20,7 +20,7 @@ class Texture {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.REPEAT);
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA,
             this.gl.UNSIGNED_BYTE, this);
-        //this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, null);
     }
 }
 

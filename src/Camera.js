@@ -48,6 +48,27 @@ class Camera {
         this.lastTime = timeNow;
     }
 
+    getNextPosition() {
+        let timeNow = new Date().getTime();
+        let x = this.x, y = this.y, z = this.z;
+
+        if (this.lastTime != 0) {
+            let elapsed = timeNow - this.lastTime;
+
+            if (this.speed != 0) {
+                x -= Math.sin(glMatrix.toRadian(this.yaw)) * this.speed * elapsed;
+                z -= Math.cos(glMatrix.toRadian(this.yaw)) * this.speed * elapsed;
+                y = this.y;
+            }
+        }
+
+        return {
+            x: x,
+            y: y,
+            z: z
+        }
+    }
+
     updateCameraMatrix() {
         mat4.identity(this.cameraMatrix);
         mat4.rotate(this.cameraMatrix, this.cameraMatrix, glMatrix.toRadian(-this.pitch), [1, 0, 0]);
@@ -56,16 +77,29 @@ class Camera {
     }
 
     getCameraMatrix() {
-        console.log(this.cameraMatrix);
         return this.cameraMatrix;
     }
 
-    getCoords() {
+    setPosition(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    getPosition() {
         return {
             x: this.x,
             y: this.y,
             z: this.z
         }
+    }
+
+    getSize() {
+        return {
+            x: 2,
+            y: 2,
+            z: 2
+        };
     }
 }
 

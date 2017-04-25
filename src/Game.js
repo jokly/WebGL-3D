@@ -102,14 +102,14 @@ var textureCoords = [
 let texture = new Texture(glContext, 'img/brickwall.png');
 
 let zTranslate = 0;
-for (let i = 0; i < 10; i++) {
-    let geometry = new Geometry(glContext);
+for (let i = 0; i < 1; i++) {
+    let geometry = new Geometry(glContext, true);
     geometry.addAttribute('vertexPosition', new Float32Array(vertices), 3);
     geometry.setIndices(new Uint16Array(indices));
     geometry.addAttribute('textureCoord', new Float32Array(textureCoords), 2);
     geometry.setTexture(texture);
     geometry.setTranslate(0, 0, zTranslate);
-    geometry.setScale(3, 3, 3);
+    //geometry.setScale(1, 1, 1);
     renderer.addGeometry(geometry);
 
     zTranslate += 2;
@@ -164,7 +164,7 @@ window.requestAnimFrame = (function(){
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame    ||
         window.ieRequestAnimationFrame     ||
-        function( callback ){
+        function(callback){
             window.setTimeout(callback, 1000 / 60);
         };
 })();
@@ -179,12 +179,12 @@ document.onkeyup = function(e) {
     currentlyPressedKeys[e.keyCode] = false;
 
     if (e.keyCode == 32) {
-        let block = new Geometry(glContext);
+        let block = new Geometry(glContext, true);
         block.addAttribute('vertexPosition', new Float32Array(vertices), 3);
         block.setIndices(new Uint16Array(indices));
         block.addAttribute('textureCoord', new Float32Array(textureCoords), 2);
         block.setTexture(texture);
-        let cameraPos = camera.getCoords();
+        let cameraPos = camera.getPosition();
         let cameraMatrix = camera.getCameraMatrix();
         let diff = [0, 0, 0];
 
@@ -209,13 +209,14 @@ document.onkeyup = function(e) {
 
 function handleKeys() {
     if (currentlyPressedKeys[33]) {
+        // Page Up
         camera.setPitchRate(0.2);
     } else if (currentlyPressedKeys[34]) {
+        // Page Down
         camera.setPitchRate(-0.2);
     } else {
         camera.setPitchRate(0);
     }
-
 
     if (currentlyPressedKeys[37] || currentlyPressedKeys[65]) {
         // Left cursor key or A
@@ -229,13 +230,42 @@ function handleKeys() {
 
     if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
         // Up cursor key or W
-        camera.setSpeed(0.05);
+        camera.setSpeed(0.01);
     } else if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
         // Down cursor key
-        camera.setSpeed(-0.05);
-    } else {
+        camera.setSpeed(-0.01);
+    }
+    else {
         camera.setSpeed(0);
     }
+
+    let newPos = camera.getNextPosition();
+
+    if (checkCollision(newPos)) {
+        camera.setSpeed(0);
+    }
+}
+
+function checkCollision(point) {
+    let geometries = renderer.getGeometries();
+
+    for (let geom of geometries) {
+        let minVec = geom.getMinVertex();
+        let maxVec = geom.getMaxVertex();
+        let eps = 0.2;
+
+        if (geom.canCollided() &&
+            (point.x - eps <= maxVec.x) &&
+            (point.x + eps >= minVec.x) &&
+            (point.y - eps <= maxVec.y) &&
+            (point.y + eps >= minVec.y) &&
+            (point.z - eps <= maxVec.z) &&
+            (point.z + eps >= minVec.z)) {
+                return true;
+        }
+    }
+
+    return false;
 }
 
 window.onresize = function(event) {

@@ -54,6 +54,10 @@ class Renderer {
         this.geometries.push(geometry);
     }
 
+    getGeometries() {
+        return this.geometries;
+    }
+
     render() {
         if (this.geometries.length === 0) {
             console.log('Cannot render: no geometry specified');
@@ -84,14 +88,14 @@ class Renderer {
 
             for (let name in geometry.attributes) {
                 let attribute = geometry.attributes[name];
-                
+
                 this.gl.bindBuffer(this.gl.ARRAY_BUFFER, attribute.buffer);
                 this.gl.vertexAttribPointer(this.attributesLocations[name], attribute.itemSize, this.gl.FLOAT, false, 0, 0);
             }
 
             this.gl.activeTexture(this.gl.TEXTURE0);
             this.gl.bindTexture(this.gl.TEXTURE_2D, geometry.texture.image.texture);
-            
+
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, geometry.indices.buffer);
 
             this.gl.drawElements(this.gl.TRIANGLE_STRIP, geometry.indices.length, this.gl.UNSIGNED_SHORT, 0);

@@ -1,11 +1,12 @@
 import { vec3 } from 'gl-matrix';
 
 import Program from './Program';
-import Geometry from './Geometry';
 import Texture from './Texture';
 import Renderer from './Renderer';
 import Pipeline from './Pipeline';
 import Camera from './Camera';
+import Cube from './Cube';
+import Floor from './Floor';
 
 let canvas = document.getElementById('webgl-canvas');
 
@@ -24,126 +25,17 @@ program.setVertexShader('shader-vs');
 program.setFragmentShader('shader-fs');
 program.setUniform('uSampler', 0,  'uniform1i');
 
-let vertices = [
-    // Front face
-      -1.0, -1.0,  1.0,
-       1.0, -1.0,  1.0,
-       1.0,  1.0,  1.0,
-      -1.0,  1.0,  1.0,
-      // Back face
-      -1.0, -1.0, -1.0,
-      -1.0,  1.0, -1.0,
-       1.0,  1.0, -1.0,
-       1.0, -1.0, -1.0,
-      // Top face
-      -1.0,  1.0, -1.0,
-      -1.0,  1.0,  1.0,
-       1.0,  1.0,  1.0,
-       1.0,  1.0, -1.0,
-      // Bottom face
-      -1.0, -1.0, -1.0,
-       1.0, -1.0, -1.0,
-       1.0, -1.0,  1.0,
-      -1.0, -1.0,  1.0,
-      // Right face
-       1.0, -1.0, -1.0,
-       1.0,  1.0, -1.0,
-       1.0,  1.0,  1.0,
-       1.0, -1.0,  1.0,
-      // Left face
-      -1.0, -1.0, -1.0,
-      -1.0, -1.0,  1.0,
-      -1.0,  1.0,  1.0,
-      -1.0,  1.0, -1.0,
-];
-
-let indices = [
-    0, 1, 2,      0, 2, 3,    // Front face
-    4, 5, 6,      4, 6, 7,    // Back face
-    8, 9, 10,     8, 10, 11,  // Top face
-    12, 13, 14,   12, 14, 15, // Bottom face
-    16, 17, 18,   16, 18, 19, // Right face
-    20, 21, 22,   20, 22, 23  // Left face
-];
-
-var textureCoords = [
-      // Front face
-      0.0, 0.0,
-      3.0, 0.0,
-      3.0, 3.0,
-      0.0, 3.0,
-      // Back face
-      3.0, 0.0,
-      3.0, 3.0,
-      0.0, 3.0,
-      0.0, 0.0,
-      // Top face
-      0.0, 3.0,
-      0.0, 0.0,
-      3.0, 0.0,
-      3.0, 3.0,
-      // Bottom face
-      3.0, 3.0,
-      0.0, 3.0,
-      0.0, 0.0,
-      3.0, 0.0,
-      // Right face
-      3.0, 0.0,
-      3.0, 3.0,
-      0.0, 3.0,
-      0.0, 0.0,
-      // Left face
-      0.0, 0.0,
-      3.0, 0.0,
-      3.0, 3.0,
-      0.0, 3.0,
-];
-
-let texture = new Texture(glContext, 'img/brickwall.png');
-
+let texture = new Texture(glContext, 'img/box.png');
 let zTranslate = 0;
-for (let i = 0; i < 1; i++) {
-    let geometry = new Geometry(glContext, true);
-    geometry.addAttribute('vertexPosition', new Float32Array(vertices), 3);
-    geometry.setIndices(new Uint16Array(indices));
-    geometry.addAttribute('textureCoord', new Float32Array(textureCoords), 2);
-    geometry.setTexture(texture);
-    geometry.setTranslate(0, 0, zTranslate);
-    //geometry.setScale(1, 1, 1);
-    renderer.addGeometry(geometry);
-
+for (let i = 0; i < 3; i++) {
+    let cube = new Cube(glContext, texture, {translate: [0, 0, zTranslate], isCollided: true});
+    renderer.addGeometry(cube.geometry);
     zTranslate += 2;
 }
 
-let floorVert = [
-    -1.0, -1.0, -1.0,
-    1.0, -1.0, -1.0,
-    1.0, -1.0,  1.0,
-    -1.0, -1.0,  1.0,
-];
-
-let floorInd = [
-    0, 1, 2,
-    0, 2, 3
-];
-
-let floorTexInd = [
-    0.0, 0.0,
-    100.0, 0.0,
-    100.0, 100.0,
-    0.0, 100.0,
-];
-
-let floorTex = new Texture(glContext, 'img/stone.png');
-
-let floor = new Geometry(glContext);
-floor.addAttribute('vertexPosition', new Float32Array(floorVert), 3);
-floor.setIndices(new Uint16Array(floorInd));
-floor.addAttribute('textureCoord', new Float32Array(floorTexInd), 2);
-floor.setTexture(floorTex);
-floor.setTranslate(0, 0, 10);
-floor.setScale(100, 1, 100);
-renderer.addGeometry(floor);
+let floorTex = new Texture(glContext, 'img/grass.jpg');
+let floor = new Floor(glContext, floorTex, {translate: [0, 0, 10], scale: [100, 1, 100]});
+renderer.addGeometry(floor.geometry);
 
 let pipeline = new Pipeline();
 pipeline.setPerspective(canvas.width, canvas.height);

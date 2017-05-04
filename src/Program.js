@@ -10,6 +10,7 @@ class Program {
         this.glProgram = null;
 
         this.uniforms = {};
+        this.lights = [];
     }
 
     setVertexShader(shaderId) {
@@ -54,7 +55,7 @@ class Program {
         if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
             console.log('Could not initialise shaders: ' + this.gl.getShaderInfoLog(shader));
             this.gl.deleteShader(shader);
-            
+
             return null;
         }
 
@@ -75,20 +76,20 @@ class Program {
         this.gl.linkProgram(this.glProgram);
 
         if (!this.gl.getProgramParameter(this.glProgram, this.gl.LINK_STATUS)) {
-            this.glProgram = null;
             console.log('Cannot link program:\n' + this.gl.getProgramInfoLog(this.glProgram));
+            this.glProgram = null;
             return;
         }
     }
 
-    setUniform(name, value, type) {
+    setUniform(name, type, ...values) {
         if (this.uniforms[name]) {
-            this.uniforms[name].value = value;
+            this.uniforms[name].value = [...values];
         }
         else {
             this.uniforms[name] = {
                 location: this.gl.getUniformLocation(this.glProgram, name),
-                value: value
+                value: [...values]
             };
 
             if (this.uniforms[name].location === -1) {
@@ -109,17 +110,58 @@ class Program {
         }
     }
 
+    setLight(position, color, index = -1) {
+        if (index === -1) {
+            this.lights.push({
+                posLoc: this.gl.getUniformLocation(this.glProgram, 'lights[' + this.lights.length +'].position'),
+                pos: position,
+                colorLoc: this.gl.getUniformLocation(this.glProgram, 'lights[' + this.lights.length +'].color'),
+                color: color,
+            });
+        } else {
+            this.lights[index] = {
+                posLoc: this.lights[index].posLoc,
+                pos: position,
+                colorLoc: this.lights[index].colorLoc,
+                color: color,
+            }
+        }
+
+        return this.lights.length;
+    }
+
+    updateLights() {
+        for (let i = 0; i < this.lights.length; i++) {
+            this.gl.uniform3fv(this.lights[i].posLoc, this.lights[i].pos);
+            this.gl.uniform3fv(this.lights[i].colorLoc, this.lights[i].color);
+        }
+    }
+
     updateUniforms() {
         for (let name in this.uniforms) {
             let uniform = this.uniforms[name];
             let method = this.gl[uniform.type];
 
             if (!method) {
-                console.log('Cannot set uniform value, unknown type: ${uniform.type}');
+                console.log('Cannot set uniform value, unknown type: ' + uniform.type);
             }
 
-            method.bind(this.gl)(uniform.location, false, uniform.value);
+            if (uniform.type.includes('uniformMatrix')) {
+                method.bind(this.gl)(uniform.location, false, uniform.value[0]);
+            }
+            else {
+                let evalStr = 'method.bind(this.gl)(uniform.location';
+
+                for (let val of uniform.value) {
+                    evalStr += ', ' + val;
+                }
+
+                evalStr += ');'
+                eval(evalStr);
+            }
         }
+
+        this.updateLights();
     }
 }
 

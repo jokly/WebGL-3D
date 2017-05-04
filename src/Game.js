@@ -7,6 +7,7 @@ import Pipeline from './Pipeline';
 import Camera from './Camera';
 import Cube from './Cube';
 import Floor from './Floor';
+import AmbientColor from './AmbientColor';
 
 let canvas = document.getElementById('webgl-canvas');
 
@@ -17,31 +18,33 @@ let glContext = canvas.getContext('webgl') || canvas.getContext('experimental-we
 
 let renderer = new Renderer(glContext, canvas.width, canvas.height);
 
-let camera = new Camera(0, 0, 10);
+let camera = new Camera(0, 2, 10);
 renderer.setCamera(camera)
 
 let program = new Program(glContext);
 program.setVertexShader('shader-vs');
 program.setFragmentShader('shader-fs');
-program.setUniform('uSampler', 0,  'uniform1i');
+program.setUniform('uSampler', 'uniform1i', 0);
+AmbientColor.addProgram(program);
+AmbientColor.updateAmbientColorUniform();
+renderer.setProgram(program);
 
-let texture = new Texture(glContext, 'img/box.png');
+let cubeTex = new Texture(glContext, 'img/box.png');
 let zTranslate = 0;
-for (let i = 0; i < 3; i++) {
-    let cube = new Cube(glContext, texture, {translate: [0, 0, zTranslate], isCollided: true});
+for (let i = 0; i < 1; i++) {
+    let cube = new Cube(glContext, cubeTex, {translate: [0, 3, zTranslate],
+        scale: [3, 3, 3], isCollided: true});
     renderer.addGeometry(cube.geometry);
     zTranslate += 2;
 }
 
 let floorTex = new Texture(glContext, 'img/grass.jpg');
 let floor = new Floor(glContext, floorTex, {translate: [0, 0, 10], scale: [100, 1, 100]});
-renderer.addGeometry(floor.geometry);
+renderer.addGeometry([floor.geometry]);
 
 let pipeline = new Pipeline();
 pipeline.setPerspective(canvas.width, canvas.height);
 renderer.setPipeline(pipeline);
-
-renderer.setProgram(program);
 
 function render() {
     window.requestAnimFrame(render);
@@ -67,35 +70,71 @@ document.onkeydown = function(e) {
     currentlyPressedKeys[e.keyCode] = true;
 };
 
+function getSpawnPosition() {
+    let cameraPos = camera.getPosition();
+    let cameraMatrix = camera.getCameraMatrix();
+    let diff = [0, 0, 0];
+
+    if (cameraMatrix[2] > 0.5) {
+        diff[0] = -3;
+    }
+    else if (cameraMatrix[2] < -0.5) {
+        diff[0] = 3;
+    }
+
+    if (cameraMatrix[10] > 0.5) {
+        diff[2] = -3;
+    }
+    else if (cameraMatrix[10] < -0.5) {
+        diff[2] = 3;
+    }
+
+    return [cameraPos.x + diff[0], cameraPos.y + diff[1], cameraPos.z + diff[2]];
+}
+
 document.onkeyup = function(e) {
     currentlyPressedKeys[e.keyCode] = false;
 
     if (e.keyCode == 32) {
-        let block = new Geometry(glContext, true);
-        block.addAttribute('vertexPosition', new Float32Array(vertices), 3);
-        block.setIndices(new Uint16Array(indices));
-        block.addAttribute('textureCoord', new Float32Array(textureCoords), 2);
-        block.setTexture(texture);
-        let cameraPos = camera.getPosition();
-        let cameraMatrix = camera.getCameraMatrix();
-        let diff = [0, 0, 0];
+        renderer.addGeometry(new Cube(glContext, cubeTex,
+            {translate: getSpawnPosition(),
+            isCollided: true}).geometry);
+    }
 
-        if (cameraMatrix[2] > 0.5) {
-            diff[0] = -3;
-        }
-        else if (cameraMatrix[2] < -0.5) {
-            diff[0] = 3;
-        }
+    if (e.keyCode == 76) {
+        let pos = getSpawnPosition();
+        let values = [pos[0], pos[1], pos[2],
+                      0, 0, 0.5];
+        let lenL = program.setLight([values[0], values[1], values[2]],
+            [values[3], values[4], values[5]]);
+        let id = lenL - 1;
 
-        if (cameraMatrix[10] > 0.5) {
-            diff[2] = -3;
-        }
-        else if (cameraMatrix[10] < -0.5) {
-            diff[2] = 3;
-        }
+        let ui = document.getElementById('ui');
+        var elements = ['l_x_' + id, 'l_y_' + id, 'l_z_' + id,
+                        'l_r_' + id, 'l_g_' + id, 'l_b_' + id];
 
-        block.setTranslate(cameraPos.x + diff[0], cameraPos.y + diff[1], cameraPos.z + diff[2]);
-        renderer.addGeometry(block);
+        for (let i = 0; i < elements.length; i++) {
+            let input = document.createElement('input');
+            input.id = elements[i];
+            input.type = 'text';
+            input.size = 3;
+            input.placeholder = elements[i];
+            input.value = values[i];
+
+            input.oninput = (e) => {
+                let index = parseFloat(e.target.id.substr(4));
+                let x = parseFloat(document.getElementById('l_x_' + index).value);
+                let y = parseFloat(document.getElementById('l_y_' + index).value);
+                let z = parseFloat(document.getElementById('l_z_' + index).value);
+                let r = parseFloat(document.getElementById('l_r_' + index).value);
+                let g = parseFloat(document.getElementById('l_g_' + index).value);
+                let b = parseFloat(document.getElementById('l_b_' + index).value);
+                program.setLight([x, y, z], [r, g, b], index);
+            }
+
+            ui.appendChild(input);
+        }
+        ui.appendChild(document.createElement('br'));
     }
 }
 

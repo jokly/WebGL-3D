@@ -80,6 +80,13 @@ class Geometry {
         return outMat;
     }
 
+    getProps() {
+        return {
+            trans: this.translate,
+            scale: this.scale
+        };
+    }
+
     canCollided() {
         return this.isCollided;
     }

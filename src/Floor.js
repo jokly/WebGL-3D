@@ -25,7 +25,15 @@ class Floor extends Shape {
         ];
         textureCoordinates.itemSize = 2;
 
-        super(glContext, vertices, indices, textureCoordinates, texture,
+        let vertexNormals = [
+            0.0,  1.0,  0.0,
+            0.0,  1.0,  0.0,
+            0.0,  1.0,  0.0,
+            0.0,  1.0,  0.0,
+        ];
+        vertexNormals.itemSize = 3;
+
+        super(glContext, vertices, indices, textureCoordinates, texture, vertexNormals,
             {translate, scale, isCollided});
     }
 }

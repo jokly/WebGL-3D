@@ -5,30 +5,70 @@
         <script id="shader-fs" type="x-shader/x-fragment">
         	precision mediump float;
 
+            struct Light {
+                vec3 position;
+                vec3 color;
+            };
+
             varying vec2 vTextureCoord;
+            varying vec3 vTransformedNormal;
+            varying vec4 vPosition;
+            varying vec3 vSurfaceWorldPosition;
+
+            uniform vec3 ambientColor;
+            uniform Light lights[100];
 
             uniform sampler2D uSampler;
 
         	void main(void) {
-                gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+                vec3 normal = normalize(vTransformedNormal);
+                vec3 lightWeighting = ambientColor;
+                for (int i = 0; i < 100; i++) {
+                    vec3 surfaceToLight = lights[i].position - vSurfaceWorldPosition;
+                    vec3 surfaceToLightDirection = normalize(surfaceToLight);
+                    float light = dot(normal, surfaceToLightDirection);
+
+                    lightWeighting += lights[i].color * light;
+                }
+                vec4 fragmentColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+                gl_FragColor = vec4(fragmentColor.rgb * lightWeighting, fragmentColor.a);
         	}
         </script>
         <script id="shader-vs" type="x-shader/x-vertex">
         	attribute vec3 vertexPosition;
+            attribute vec3 vertexNormal;
             attribute vec2 textureCoord;
 
-        	uniform mat4 gWorld;
+            uniform mat4 mMatrix;
+            uniform mat4 vMatrix;
+            uniform mat4 pMatrix;
+            uniform mat3 nMatrix;
 
             varying vec2 vTextureCoord;
+            varying vec3 vTransformedNormal;
+            varying vec4 vPosition;
+            varying vec3 vSurfaceWorldPosition;
 
   			void main(void) {
-			    gl_Position = gWorld * vec4(vertexPosition, 1.0);
+                vPosition = vMatrix * mMatrix * vec4(vertexPosition, 1.0);
+			    gl_Position = pMatrix * vPosition;
                 vTextureCoord = textureCoord;
+                vTransformedNormal = nMatrix * vertexNormal;
+                vSurfaceWorldPosition = (mMatrix * vec4(vertexPosition, 1.0)).xyz;
 			}
         </script>
     </head>
     <body>
-    	<canvas id="webgl-canvas" style="border:none;"></canvas>
+        <canvas id="webgl-canvas" style="border:none;"></canvas>
+        <div id="ui">
+            <label>Ambient Color [R, G, B]: </label>
+            <input type="text" id="ambientR" size="3" placeholder="R" value="0.02">
+            <input type="text" id="ambientG" size="3" placeholder="G" value="0.02">
+            <input type="text" id="ambientB" size="3" placeholder="B" value="0.02">
+            <br>
+            <label>Lights: position(x, y, z) | color(r, g, b): </label>
+            <br>
+        </div>
         <script type="text/javascript" src="build/main.js"></script>
     </body>
 </html>

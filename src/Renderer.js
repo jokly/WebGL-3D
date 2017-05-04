@@ -51,7 +51,7 @@ class Renderer {
     }
 
     addGeometry(geometry) {
-        this.geometries.push(geometry);
+        this.geometries.push(...geometry);
     }
 
     getGeometries() {
@@ -82,6 +82,7 @@ class Renderer {
 
             this.pipeline.setObjectMatrix(geometry.getTransformMatrix());
             this.pipeline.setCameraMatrix(this.camera.getCameraMatrix());
+            this.pipeline.setObjectProps(geometry.getProps());
             this.pipeline.updateTransformMatrix(this.program);
 
             this.program.updateUniforms();

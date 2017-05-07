@@ -8,6 +8,7 @@ import Camera from './Camera';
 import Cube from './Cube';
 import Floor from './Floor';
 import AmbientLight from './AmbientLight';
+import PointLights from './PointLights';
 
 let canvas = document.getElementById('webgl-canvas');
 
@@ -25,8 +26,11 @@ let program = new Program(glContext);
 program.setVertexShader('shader-vs');
 program.setFragmentShader('shader-fs');
 program.setUniform('uSampler', 'uniform1i', 0);
+
 AmbientLight.addProgram(program);
 AmbientLight.updateAmbientLightUniform();
+let pointLights = new PointLights(program);
+
 renderer.setProgram(program);
 
 let cubeTex = new Texture(glContext, 'img/box.png');
@@ -105,7 +109,7 @@ document.onkeyup = function(e) {
         let pos = getSpawnPosition();
         let values = [pos[0], pos[1], pos[2],
                       0, 0, 0.5];
-        let lenL = program.setLight([values[0], values[1], values[2]],
+        let lenL = pointLights.setLight([values[0], values[1], values[2]],
             [values[3], values[4], values[5]]);
         let id = lenL - 1;
 
@@ -129,7 +133,7 @@ document.onkeyup = function(e) {
                 let r = parseFloat(document.getElementById('l_r_' + index).value);
                 let g = parseFloat(document.getElementById('l_g_' + index).value);
                 let b = parseFloat(document.getElementById('l_b_' + index).value);
-                program.setLight([x, y, z], [r, g, b], index);
+                pointLights.setLight([x, y, z], [r, g, b], index);
             }
 
             ui.appendChild(input);

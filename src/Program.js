@@ -110,33 +110,6 @@ class Program {
         }
     }
 
-    setLight(position, color, index = -1) {
-        if (index === -1) {
-            this.lights.push({
-                posLoc: this.gl.getUniformLocation(this.glProgram, 'lights[' + this.lights.length +'].position'),
-                pos: position,
-                colorLoc: this.gl.getUniformLocation(this.glProgram, 'lights[' + this.lights.length +'].color'),
-                color: color,
-            });
-        } else {
-            this.lights[index] = {
-                posLoc: this.lights[index].posLoc,
-                pos: position,
-                colorLoc: this.lights[index].colorLoc,
-                color: color,
-            }
-        }
-
-        return this.lights.length;
-    }
-
-    updateLights() {
-        for (let i = 0; i < this.lights.length; i++) {
-            this.gl.uniform3fv(this.lights[i].posLoc, this.lights[i].pos);
-            this.gl.uniform3fv(this.lights[i].colorLoc, this.lights[i].color);
-        }
-    }
-
     updateUniforms() {
         for (let name in this.uniforms) {
             let uniform = this.uniforms[name];
@@ -160,8 +133,6 @@ class Program {
                 eval(evalStr);
             }
         }
-
-        this.updateLights();
     }
 }
 

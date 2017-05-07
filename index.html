@@ -3,6 +3,7 @@
         <title>WebGL 3D</title>
         <link href="css/style.css" rel="stylesheet">
         <script id="shader-fs" type="x-shader/x-fragment">
+            #define NUM_POINT_LIGHTS 100
         	precision mediump float;
 
             struct Light {
@@ -16,19 +17,19 @@
             varying vec3 vSurfaceWorldPosition;
 
             uniform vec3 ambientColor;
-            uniform Light lights[100];
+            uniform Light pointLights[NUM_POINT_LIGHTS];
 
             uniform sampler2D uSampler;
 
         	void main(void) {
                 vec3 normal = normalize(vTransformedNormal);
                 vec3 lightWeighting = ambientColor;
-                for (int i = 0; i < 100; i++) {
-                    vec3 surfaceToLight = lights[i].position - vSurfaceWorldPosition;
+                for (int i = 0; i < NUM_POINT_LIGHTS; i++) {
+                    vec3 surfaceToLight = pointLights[i].position - vSurfaceWorldPosition;
                     vec3 surfaceToLightDirection = normalize(surfaceToLight);
                     float light = dot(normal, surfaceToLightDirection);
 
-                    lightWeighting += lights[i].color * light;
+                    lightWeighting += pointLights[i].color * light;
                 }
                 vec4 fragmentColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
                 gl_FragColor = vec4(fragmentColor.rgb * lightWeighting, fragmentColor.a);

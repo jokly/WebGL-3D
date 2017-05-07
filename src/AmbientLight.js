@@ -1,8 +1,8 @@
-class AmbientColor {
+class AmbientLight {
     static programs = [];
 
     static addProgram = function(program) {
-        AmbientColor.programs.push(program);
+        AmbientLight.programs.push(program);
     }
 
     static getRGB = function() {
@@ -13,25 +13,25 @@ class AmbientColor {
         return {r, g, b};
     }
 
-    static updateAmbientColorUniform = function() {
-        let color = AmbientColor.getRGB();
+    static updateAmbientLightUniform = function() {
+        let color = AmbientLight.getRGB();
 
-        for (let i = 0; i < AmbientColor.programs.length; i++) {
-            AmbientColor.programs[i].setUniform('ambientColor', 'uniform3f', color.r, color.g, color.b);
+        for (let i = 0; i < AmbientLight.programs.length; i++) {
+            AmbientLight.programs[i].setUniform('ambientColor', 'uniform3f', color.r, color.g, color.b);
         }
     }
 }
 
 document.getElementById('ambientR').oninput = () => {
-    AmbientColor.updateAmbientColorUniform();
+    AmbientLight.updateAmbientLightUniform();
 }
 
 document.getElementById('ambientG').oninput = () => {
-    AmbientColor.updateAmbientColorUniform();
+    AmbientLight.updateAmbientLightUniform();
 }
 
 document.getElementById('ambientB').oninput = () => {
-    AmbientColor.updateAmbientColorUniform();
+    AmbientLight.updateAmbientLightUniform();
 }
 
-export default AmbientColor;
+export default AmbientLight;

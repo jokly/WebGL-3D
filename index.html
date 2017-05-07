@@ -50,8 +50,8 @@
             varying vec3 vSurfaceWorldPosition;
 
   			void main(void) {
-                vPosition = vMatrix * mMatrix * vec4(vertexPosition, 1.0);
-			    gl_Position = pMatrix * vPosition;
+                vPosition = mMatrix * vec4(vertexPosition, 1.0);
+			    gl_Position = pMatrix * vMatrix * vPosition;
                 vTextureCoord = textureCoord;
                 vTransformedNormal = nMatrix * vertexNormal;
                 vSurfaceWorldPosition = (mMatrix * vec4(vertexPosition, 1.0)).xyz;

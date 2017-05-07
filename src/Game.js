@@ -7,7 +7,7 @@ import Pipeline from './Pipeline';
 import Camera from './Camera';
 import Cube from './Cube';
 import Floor from './Floor';
-import AmbientColor from './AmbientColor';
+import AmbientLight from './AmbientLight';
 
 let canvas = document.getElementById('webgl-canvas');
 
@@ -25,8 +25,8 @@ let program = new Program(glContext);
 program.setVertexShader('shader-vs');
 program.setFragmentShader('shader-fs');
 program.setUniform('uSampler', 'uniform1i', 0);
-AmbientColor.addProgram(program);
-AmbientColor.updateAmbientColorUniform();
+AmbientLight.addProgram(program);
+AmbientLight.updateAmbientLightUniform();
 renderer.setProgram(program);
 
 let cubeTex = new Texture(glContext, 'img/box.png');

@@ -27,8 +27,8 @@ program.setVertexShader('shader-vs');
 program.setFragmentShader('shader-fs');
 program.setUniform('uSampler', 'uniform1i', 0);
 
-AmbientLight.addProgram(program);
-AmbientLight.updateAmbientLightUniform();
+let ambientLight = new AmbientLight(program);
+ambientLight.updateAmbientLightUniform();
 let pointLights = new PointLights(program);
 
 renderer.setProgram(program);
@@ -201,6 +201,18 @@ function checkCollision(point) {
     }
 
     return false;
+}
+
+document.getElementById('ambientR').oninput = () => {
+    ambientLight.updateAmbientLightUniform();
+}
+
+document.getElementById('ambientG').oninput = () => {
+    ambientLight.updateAmbientLightUniform();
+}
+
+document.getElementById('ambientB').oninput = () => {
+    ambientLight.updateAmbientLightUniform();
 }
 
 window.onresize = function(event) {

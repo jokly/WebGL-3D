@@ -13,6 +13,11 @@ input {
     margin-top: 5px;
 }
 
+img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+}
+
 #webgl-canvas {
     display: block;
     position: absolute;

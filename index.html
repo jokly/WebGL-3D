@@ -59,7 +59,7 @@
 			}
         </script>
     </head>
-    <body>
+    <body onload="window.disableLongTouch()">
         <canvas id="webgl-canvas" style="border:none;"></canvas>
         <div id="ui">
             <label>Ambient Color [R, G, B]: </label>
@@ -71,19 +71,19 @@
             <br>
         </div>
         <div id="mobile-controls">
-            <img class="forward" onmousedown="window.uiMouseDown(38)" onmouseup="window.uiMouseUp(38)"
+            <img id="forward" class="forward" onmousedown="window.uiMouseDown(38)" onmouseup="window.uiMouseUp(38)"
                 ontouchstart="window.uiMouseDown(38)" ontouchend="window.uiMouseUp(38)" src="img/ui/forward.png"> <br>
-            <img class="mobile-button" onmousedown="window.uiMouseDown(37)" onmouseup="window.uiMouseUp(37)"
+            <img id="left" class="mobile-button" onmousedown="window.uiMouseDown(37)" onmouseup="window.uiMouseUp(37)"
                 ontouchstart="window.uiMouseDown(37)" ontouchend="window.uiMouseUp(37)" src="img/ui/left.png">
-            <img class="mobile-button" onmousedown="window.uiMouseDown(40)" onmouseup="window.uiMouseUp(40)"
+            <img id="backward" class="mobile-button" onmousedown="window.uiMouseDown(40)" onmouseup="window.uiMouseUp(40)"
                 ontouchstart="window.uiMouseDown(40)" ontouchend="window.uiMouseUp(40)" src="img/ui/backward.png">
-            <img class="mobile-button" onmousedown="window.uiMouseDown(39)" onmouseup="window.uiMouseUp(39)"
+            <img id="right" class="mobile-button" onmousedown="window.uiMouseDown(39)" onmouseup="window.uiMouseUp(39)"
                 ontouchstart="window.uiMouseDown(39)" ontouchend="window.uiMouseUp(39)" src="img/ui/right.png">
 
             <div id="spawn-buttons">
-                <img onmouseup="window.uiMouseUp('c')" ontouchend="window.uiMouseUp('c')"
+                <img id="spawnCube" onmouseup="window.uiMouseUp('c')" ontouchend="window.uiMouseUp('c')"
                     src="img/ui/spawnCube.png">
-                <img class="mobile-button" onmouseup="window.uiMouseUp('l')" ontouchend="window.uiMouseUp('l')"
+                <img id="spawnLight" class="mobile-button" onmouseup="window.uiMouseUp('l')" ontouchend="window.uiMouseUp('l')"
                     src="img/ui/spawnLight.png">
             </div>
         </div>

@@ -23,3 +23,29 @@ input {
     left: 5px;
     top: 5px;
 }
+
+#mobile-controls {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+}
+
+.mobile-button {
+    margin-left: 10px;
+}
+
+.forward {
+    margin-left: 100px;
+}
+
+#spawn-buttons {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+}
+
+#menu {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}

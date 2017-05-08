@@ -96,6 +96,42 @@ function getSpawnPosition() {
     return [cameraPos.x + diff[0], cameraPos.y + diff[1], cameraPos.z + diff[2]];
 }
 
+function spawnLight() {
+    let pos = getSpawnPosition();
+    let values = [pos[0], pos[1], pos[2],
+                  0, 0, 0.5];
+    let lenL = pointLights.setLight([values[0], values[1], values[2]],
+        [values[3], values[4], values[5]]);
+    let id = lenL - 1;
+
+    let ui = document.getElementById('ui');
+    var elements = ['l_x_' + id, 'l_y_' + id, 'l_z_' + id,
+                    'l_r_' + id, 'l_g_' + id, 'l_b_' + id];
+
+    for (let i = 0; i < elements.length; i++) {
+        let input = document.createElement('input');
+        input.id = elements[i];
+        input.type = 'text';
+        input.size = 3;
+        input.placeholder = elements[i];
+        input.value = values[i];
+
+        input.oninput = (e) => {
+            let index = parseFloat(e.target.id.substr(4));
+            let x = parseFloat(document.getElementById('l_x_' + index).value);
+            let y = parseFloat(document.getElementById('l_y_' + index).value);
+            let z = parseFloat(document.getElementById('l_z_' + index).value);
+            let r = parseFloat(document.getElementById('l_r_' + index).value);
+            let g = parseFloat(document.getElementById('l_g_' + index).value);
+            let b = parseFloat(document.getElementById('l_b_' + index).value);
+            pointLights.setLight([x, y, z], [r, g, b], index);
+        }
+
+        ui.appendChild(input);
+    }
+    ui.appendChild(document.createElement('br'));
+}
+
 document.onkeyup = function(e) {
     currentlyPressedKeys[e.keyCode] = false;
 
@@ -106,39 +142,7 @@ document.onkeyup = function(e) {
     }
 
     if (e.keyCode == 76) {
-        let pos = getSpawnPosition();
-        let values = [pos[0], pos[1], pos[2],
-                      0, 0, 0.5];
-        let lenL = pointLights.setLight([values[0], values[1], values[2]],
-            [values[3], values[4], values[5]]);
-        let id = lenL - 1;
-
-        let ui = document.getElementById('ui');
-        var elements = ['l_x_' + id, 'l_y_' + id, 'l_z_' + id,
-                        'l_r_' + id, 'l_g_' + id, 'l_b_' + id];
-
-        for (let i = 0; i < elements.length; i++) {
-            let input = document.createElement('input');
-            input.id = elements[i];
-            input.type = 'text';
-            input.size = 3;
-            input.placeholder = elements[i];
-            input.value = values[i];
-
-            input.oninput = (e) => {
-                let index = parseFloat(e.target.id.substr(4));
-                let x = parseFloat(document.getElementById('l_x_' + index).value);
-                let y = parseFloat(document.getElementById('l_y_' + index).value);
-                let z = parseFloat(document.getElementById('l_z_' + index).value);
-                let r = parseFloat(document.getElementById('l_r_' + index).value);
-                let g = parseFloat(document.getElementById('l_g_' + index).value);
-                let b = parseFloat(document.getElementById('l_b_' + index).value);
-                pointLights.setLight([x, y, z], [r, g, b], index);
-            }
-
-            ui.appendChild(input);
-        }
-        ui.appendChild(document.createElement('br'));
+        spawnLight();
     }
 }
 
@@ -201,6 +205,35 @@ function checkCollision(point) {
     }
 
     return false;
+}
+
+window.uiMouseDown = function (keyCode) {
+    currentlyPressedKeys[keyCode] = true;
+}
+
+window.uiMouseUp = function (keyCode) {
+    currentlyPressedKeys[keyCode] = false;
+
+    if (keyCode === 'c') {
+        renderer.addGeometry(new Cube(glContext, cubeTex,
+            {translate: getSpawnPosition(),
+            isCollided: true}).geometry);
+    }
+
+    if (keyCode === 'l') {
+        spawnLight();
+    }
+}
+
+window.toggleUI = function() {
+    let ui = document.getElementById('mobile-controls');
+
+    if (ui.style.display === 'block') {
+        ui.style.display = 'none';
+    }
+    else {
+        ui.style.display = 'block';
+    }
 }
 
 document.getElementById('ambientR').oninput = () => {

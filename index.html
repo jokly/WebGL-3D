@@ -70,6 +70,24 @@
             <label>Lights: position(x, y, z) | color(r, g, b): </label>
             <br>
         </div>
+        <div id="mobile-controls">
+            <img class="forward" onmousedown="window.uiMouseDown(38)" onmouseup="window.uiMouseUp(38)"
+                ontouchstart="window.uiMouseDown(38)" ontouchend="window.uiMouseUp(38)" src="img/ui/forward.png"> <br>
+            <img class="mobile-button" onmousedown="window.uiMouseDown(37)" onmouseup="window.uiMouseUp(37)"
+                ontouchstart="window.uiMouseDown(37)" ontouchend="window.uiMouseUp(37)" src="img/ui/left.png">
+            <img class="mobile-button" onmousedown="window.uiMouseDown(40)" onmouseup="window.uiMouseUp(40)"
+                ontouchstart="window.uiMouseDown(40)" ontouchend="window.uiMouseUp(40)" src="img/ui/backward.png">
+            <img class="mobile-button" onmousedown="window.uiMouseDown(39)" onmouseup="window.uiMouseUp(39)"
+                ontouchstart="window.uiMouseDown(39)" ontouchend="window.uiMouseUp(39)" src="img/ui/right.png">
+
+            <div id="spawn-buttons">
+                <img onmouseup="window.uiMouseUp('c')" ontouchend="window.uiMouseUp('c')"
+                    src="img/ui/spawnCube.png">
+                <img class="mobile-button" onmouseup="window.uiMouseUp('l')" ontouchend="window.uiMouseUp('l')"
+                    src="img/ui/spawnLight.png">
+            </div>
+        </div>
+        <img id="menu" onmouseup="window.toggleUI()" ontouchend="window.toggleUI()" src="img/ui/menu.png">
         <script type="text/javascript" src="build/main.js"></script>
     </body>
 </html>

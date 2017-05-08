@@ -256,13 +256,7 @@ window.onresize = function(event) {
     renderer.setViewport(canvas.width, canvas.height);
 };
 
-function context_menu(e){
-    if(!e)var e=window.event;
-    var eTarget=window.event?e.srcElement:e.target;
-    return "IMG" == eTarget.tagName ? false : true;
-}
-
-document.oncontextmenu = context_menu;
+document.addEventListener('contextmenu', event => event.preventDefault());
 
 window.onmousemove = function(event) {
     // change camera matrix on mouse move

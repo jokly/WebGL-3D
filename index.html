@@ -17,13 +17,19 @@
             varying vec3 vSurfaceWorldPosition;
 
             uniform vec3 ambientColor;
+            uniform vec3 lightingDirection;
+            uniform vec3 directionalColor;
             uniform Light pointLights[NUM_POINT_LIGHTS];
 
             uniform sampler2D uSampler;
 
         	void main(void) {
-                vec3 normal = normalize(vTransformedNormal);
                 vec3 lightWeighting = ambientColor;
+
+                float directionalLightWeighting = max(dot(vTransformedNormal, lightingDirection), 0.0);
+                lightWeighting += directionalColor * directionalLightWeighting;
+
+                vec3 normal = normalize(vTransformedNormal);
                 for (int i = 0; i < NUM_POINT_LIGHTS; i++) {
                     vec3 surfaceToLight = pointLights[i].position - vSurfaceWorldPosition;
                     vec3 surfaceToLightDirection = normalize(surfaceToLight);
@@ -32,6 +38,7 @@
                     lightWeighting += pointLights[i].color * light * max(1.0 - length(surfaceToLight) * 0.01, 0.0);
 
                 }
+
                 vec4 fragmentColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
                 gl_FragColor = vec4(fragmentColor.rgb * lightWeighting, fragmentColor.a);
         	}
@@ -68,7 +75,16 @@
             <input type="text" id="ambientG" size="3" placeholder="G" value="0.02">
             <input type="text" id="ambientB" size="3" placeholder="B" value="0.02">
             <br>
-            <label>Lights: position(x, y, z) | color(r, g, b): </label>
+            <label>Lighting Direction [direction(x, y, z) | color(r, g, b)]: </label>
+            <br>
+            <input type="text" id="directionX" size="3" placeholder="x" value="-0.25">
+            <input type="text" id="directionY" size="3" placeholder="y" value="-0.25">
+            <input type="text" id="directionZ" size="3" placeholder="z" value="-1.0">
+            <input type="text" id="directionR" size="3" placeholder="r" value="0.2">
+            <input type="text" id="directionG" size="3" placeholder="g" value="0.2">
+            <input type="text" id="directionB" size="3" placeholder="b" value="0.2">
+            <br>
+            <label>Lights [position(x, y, z) | color(r, g, b)]: </label>
             <br>
         </div>
         <div id="mobile-controls">

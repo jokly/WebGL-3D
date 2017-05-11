@@ -8,6 +8,7 @@ import Camera from './Camera';
 import Cube from './Cube';
 import Floor from './Floor';
 import AmbientLight from './AmbientLight';
+import LightingDirection from './LightingDirection'
 import PointLights from './PointLights';
 
 let canvas = document.getElementById('webgl-canvas');
@@ -29,6 +30,8 @@ program.setUniform('uSampler', 'uniform1i', 0);
 
 let ambientLight = new AmbientLight(program);
 ambientLight.updateAmbientLightUniform();
+let lightingDirection= new LightingDirection(program);
+lightingDirection.update();
 let pointLights = new PointLights(program);
 
 renderer.setProgram(program);
@@ -246,6 +249,30 @@ document.getElementById('ambientG').oninput = () => {
 
 document.getElementById('ambientB').oninput = () => {
     ambientLight.updateAmbientLightUniform();
+}
+
+document.getElementById('directionX').oninput = () => {
+    lightingDirection.updateDirection();
+}
+
+document.getElementById('directionY').oninput = () => {
+    lightingDirection.updateDirection();
+}
+
+document.getElementById('directionZ').oninput = () => {
+    lightingDirection.updateDirection();
+}
+
+document.getElementById('directionR').oninput = () => {
+    lightingDirection.updateColor();
+}
+
+document.getElementById('directionG').oninput = () => {
+    lightingDirection.updateColor();
+}
+
+document.getElementById('directionB').oninput = () => {
+    lightingDirection.updateColor();
 }
 
 window.onresize = function(event) {

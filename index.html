@@ -29,7 +29,8 @@
                     vec3 surfaceToLightDirection = normalize(surfaceToLight);
                     float light = dot(normal, surfaceToLightDirection);
 
-                    lightWeighting += pointLights[i].color * light;
+                    lightWeighting += pointLights[i].color * light * max(1.0 - length(surfaceToLight) * 0.01, 0.0);
+
                 }
                 vec4 fragmentColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
                 gl_FragColor = vec4(fragmentColor.rgb * lightWeighting, fragmentColor.a);
@@ -54,7 +55,7 @@
                 vPosition = mMatrix * vec4(vertexPosition, 1.0);
 			    gl_Position = pMatrix * vMatrix * vPosition;
                 vTextureCoord = textureCoord;
-                vTransformedNormal = nMatrix * vertexNormal;
+                vTransformedNormal = (mMatrix * vec4(vertexNormal, 0.0)).xyz;
                 vSurfaceWorldPosition = (mMatrix * vec4(vertexPosition, 1.0)).xyz;
 			}
         </script>

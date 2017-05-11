@@ -99,7 +99,7 @@ function getSpawnPosition() {
 function spawnLight() {
     let pos = getSpawnPosition();
     let values = [pos[0], pos[1], pos[2],
-                  0, 0, 0.5];
+                  0, 0.5, 0];
     let lenL = pointLights.setLight([values[0], values[1], values[2]],
         [values[3], values[4], values[5]]);
     let id = lenL - 1;

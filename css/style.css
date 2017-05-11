@@ -27,6 +27,9 @@ img {
     position: absolute;
     left: 5px;
     top: 5px;
+    padding: 0px 0 5px 5px;
+    background: #fff;
+    border-radius: 5px;
 }
 
 #mobile-controls {
@@ -53,4 +56,9 @@ img {
     position: absolute;
     top: 5px;
     right: 5px;
+}
+
+.scroll {
+  overflow-y: scroll;
+  height: 200px;
 }

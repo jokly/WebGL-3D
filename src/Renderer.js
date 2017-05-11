@@ -17,7 +17,7 @@ class Renderer {
 
     init() {
         this.gl.enable(this.gl.DEPTH_TEST);
-        this.gl.clearColor(0.0, 153.0, 255.0, 1.0);
+        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     }
 
     setProgram(program) {

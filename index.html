@@ -70,10 +70,14 @@
     <body>
         <canvas id="webgl-canvas" style="border:none;"></canvas>
         <div id="ui" class="scroll">
+            <input type="text" id="saveName" size="20" placeholder="Save Name" value="newGame">
+            <button id="btn_save">Save</button>
+            <button id="btn_load" onclick="window.onLoadClick()">Load</button>
+            <br>
             <label>Ambient Color [R, G, B]: </label>
-            <input type="text" id="ambientR" size="3" placeholder="R" value="0.02">
-            <input type="text" id="ambientG" size="3" placeholder="G" value="0.02">
-            <input type="text" id="ambientB" size="3" placeholder="B" value="0.02">
+            <input type="text" id="ambientR" size="3" placeholder="R" value="">
+            <input type="text" id="ambientG" size="3" placeholder="G" value="">
+            <input type="text" id="ambientB" size="3" placeholder="B" value="">
             <br>
             <label>Lighting Direction [direction(x, y, z) | color(r, g, b)]: </label>
             <br>

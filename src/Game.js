@@ -27,27 +27,11 @@ let program = new Program(glContext);
 program.setVertexShader('shader-vs');
 program.setFragmentShader('shader-fs');
 program.setUniform('uSampler', 'uniform1i', 0);
-
-let ambientLight = new AmbientLight(program);
-ambientLight.updateAmbientLightUniform();
-let lightingDirection= new LightingDirection(program);
-lightingDirection.update();
-let pointLights = new PointLights(program);
-
 renderer.setProgram(program);
 
-let cubeTex = new Texture(glContext, 'img/box.png');
-let zTranslate = 0;
-for (let i = 0; i < 1; i++) {
-    let cube = new Cube(glContext, cubeTex, {translate: [0, 3, zTranslate],
-        scale: [3, 3, 3], isCollided: true});
-    renderer.addGeometry(cube.geometry);
-    zTranslate += 2;
-}
-
-let floorTex = new Texture(glContext, 'img/grass.jpg');
-let floor = new Floor(glContext, floorTex, {translate: [0, 0, 10], scale: [100, 1, 100]});
-renderer.addGeometry([floor.geometry]);
+let ambientLight = new AmbientLight(program);
+let lightingDirection= new LightingDirection(program);
+let pointLights = new PointLights(program);
 
 let pipeline = new Pipeline();
 pipeline.setPerspective(canvas.width, canvas.height);
@@ -99,10 +83,17 @@ function getSpawnPosition() {
     return [cameraPos.x + diff[0], cameraPos.y + diff[1], cameraPos.z + diff[2]];
 }
 
-function spawnLight() {
-    let pos = getSpawnPosition();
+function spawnLight(r, g, b, x = -1, y = -1, z = -1) {
+    let pos;
+    if (x == -1 || y == -1 || z == -1) {
+        pos = getSpawnPosition();
+    }
+    else {
+        pos = [x, y, z];
+    }
+
     let values = [pos[0], pos[1], pos[2],
-                  0, 0.5, 0];
+                  r, g, b];
     let lenL = pointLights.setLight([values[0], values[1], values[2]],
         [values[3], values[4], values[5]]);
     let id = lenL - 1;
@@ -145,7 +136,7 @@ document.onkeyup = function(e) {
     }
 
     if (e.keyCode == 76) {
-        spawnLight();
+        spawnLight(0, 0.5, 0);
     }
 }
 
@@ -208,6 +199,70 @@ function checkCollision(point) {
     }
 
     return false;
+}
+
+function saveGame(saveName) {
+
+}
+
+function loadGame(savedGame) {
+    // load Camera
+    let cameraPos = savedGame.camera;
+    camera.setPosition(camera.x, camera.y, camera.z);
+    camera.setSYP(camera.speed, camera.yaw, camera.pitch);
+
+    // load Textures
+    let textures = {}
+    for (let texture of savedGame.textures) {
+        textures[texture.name] = new Texture(glContext, texture.path);
+    }
+
+    // load Objects
+    for (let shape of savedGame.shapes) {
+        switch (shape.type) {
+            case 'Floor':
+                renderer.addGeometry([new Floor(glContext, textures[shape.texture],
+                    {translate: shape.translate, scale: shape.scale, isCollided: shape.isCollided}).geometry]);
+                break;
+            case 'Cube':
+                renderer.addGeometry(new Cube(glContext, textures[shape.texture],
+                    {translate: shape.translate, scale: shape.scale, isCollided: shape.isCollided}).geometry);
+                break;
+        }
+    }
+
+    // load Ambient Light
+    let ambLight = savedGame.ambientLight;
+    ambientLight.setRGB(ambLight.r, ambLight.g, ambLight.b);
+
+    // load Lighting Direction
+    let lightingDir = savedGame.lightingDirection;
+    lightingDirection.setDirection(lightingDir.x, lightingDir.y, lightingDir.z);
+    lightingDirection.setRGB(lightingDir.r, lightingDir.g, lightingDir.b);
+
+    // load Point Lights
+    for (let light of savedGame.pointLights) {
+        spawnLight(light.r, light.g, light.b, light.x, light.y, light.z);
+    }
+}
+
+window.onSaveClick = function() {
+
+}
+
+var saveFile;
+window.onLoadClick = function() {
+    let saveName = document.getElementById('saveName').value;
+
+    if (saveName === '') {
+        saveName = 'newGame';
+    }
+
+    if (saveFile === undefined) {
+        saveFile = require('../saves/saves.json');
+    }
+
+    loadGame(saveFile[saveName]);
 }
 
 window.uiMouseDown = function (keyCode) {
@@ -289,4 +344,6 @@ window.onmousemove = function(event) {
     // change camera matrix on mouse move
 };
 
+// Loading new Game
+window.onLoadClick();
 render();

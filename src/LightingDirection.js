@@ -13,12 +13,28 @@ class LightingDirection {
         return {x, y, z};
     }
 
+    setDirection(x, y, z) {
+        document.getElementById('directionX').value = x;
+        document.getElementById('directionY').value = y;
+        document.getElementById('directionZ').value = z;
+
+        this.updateDirection();
+    }
+
     getRGB() {
         let r = parseFloat(document.getElementById('directionR').value);
         let g = parseFloat(document.getElementById('directionG').value);
         let b = parseFloat(document.getElementById('directionB').value);
 
         return {r, g, b};
+    }
+
+    setRGB(r, g, b) {
+        document.getElementById('directionR').value = r;
+        document.getElementById('directionG').value = g;
+        document.getElementById('directionB').value = b;
+
+        this.updateColor();
     }
 
     updateDirection() {

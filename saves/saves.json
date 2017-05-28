@@ -1,0 +1,61 @@
+{
+    "newGame": {
+        "camera": {
+            "x": 0,
+            "y": 2,
+            "z": 10,
+            "speed": 0,
+            "yaw": 0,
+            "pitch": 0,
+        },
+        "textures": [
+            {
+                "name": "cubeTex",
+                "path": "img/box.png",
+            },
+            {
+                "name": "floorTex",
+                "path": "img/grass.jpg",
+            },
+        ],
+        "shapes": [
+            {
+                "type": "Floor",
+                "texture": "floorTex",
+                "translate": [0, 0, 10],
+                "scale": [100, 1, 100],
+                "isCollided": false,
+            },
+            {
+                "type": "Cube",
+                "texture": "cubeTex",
+                "translate": [0, 3, 0],
+                "scale": [3, 3, 3],
+                "isCollided": true,
+            },
+        ],
+        "ambientLight": {
+            "r": 0.02,
+            "g": 0.02,
+            "b": 0.02,
+        },
+        "lightingDirection": {
+            "x": -0.25,
+            "y": -0.25,
+            "z": -1.0,
+            "r": 0.2,
+            "g": 0.2,
+            "b": 0.2,
+        },
+        "pointLights": [
+            {
+                "x": 0,
+                "y": 2,
+                "z": 20,
+                "r": 0,
+                "g": 0.5,
+                "b": 0,
+            },
+        ],
+    },
+}

@@ -11,6 +11,14 @@ class AmbientLight {
         return {r, g, b};
     }
 
+    setRGB(r, g, b) {
+        document.getElementById('ambientR').value = r;
+        document.getElementById('ambientG').value = g;
+        document.getElementById('ambientB').value = b;
+
+        this.updateAmbientLightUniform();
+    }
+
     updateAmbientLightUniform(){
         let color = this.getRGB();
         this.program.setUniform('ambientColor', 'uniform3f', color.r, color.g, color.b);

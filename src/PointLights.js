@@ -26,6 +26,16 @@ class PointLights {
 
         return this.pointLights.length;
     }
+
+    clearLights() {
+        for (let i = 0; i < this.pointLights.length; i++) {
+            this.program.setUniform('pointLights[' + i + '].color', 'uniform3f',
+                0, 0, 0);
+        }
+        this.program.updateUniforms();
+
+        this.pointLights = [];
+    }
 }
 
 export default PointLights;

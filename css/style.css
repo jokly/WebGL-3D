@@ -27,7 +27,7 @@ img {
     position: absolute;
     left: 5px;
     top: 5px;
-    padding: 0px 0 5px 5px;
+    padding: 5px;
     background: #fff;
     border-radius: 5px;
 }

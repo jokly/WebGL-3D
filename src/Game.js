@@ -102,6 +102,9 @@ function spawnLight(r, g, b, x = -1, y = -1, z = -1) {
     var elements = ['l_x_' + id, 'l_y_' + id, 'l_z_' + id,
                     'l_r_' + id, 'l_g_' + id, 'l_b_' + id];
 
+    let span = document.createElement('span');
+    span.id = 'light_' + id;
+
     for (let i = 0; i < elements.length; i++) {
         let input = document.createElement('input');
         input.id = elements[i];
@@ -121,9 +124,25 @@ function spawnLight(r, g, b, x = -1, y = -1, z = -1) {
             pointLights.setLight([x, y, z], [r, g, b], index);
         }
 
-        ui.appendChild(input);
+        span.appendChild(input)
     }
-    ui.appendChild(document.createElement('br'));
+
+    span.appendChild(document.createElement('br'))
+    ui.appendChild(span);
+}
+
+function removeLights() {
+    let i = 0;
+    let light = document.getElementById('light_' + i);
+    while (light !== null) {
+        document.getElementById('ui').removeChild(light);
+        i++;
+        light = document.getElementById('light_' + i);
+    }
+
+    pointLights.clearLights();
+
+    return true;
 }
 
 document.onkeyup = function(e) {
@@ -206,10 +225,13 @@ function saveGame(saveName) {
 }
 
 function loadGame(savedGame) {
+    // update geometries in Renderer
+    removeLights();
+
     // load Camera
-    let cameraPos = savedGame.camera;
-    camera.setPosition(camera.x, camera.y, camera.z);
-    camera.setSYP(camera.speed, camera.yaw, camera.pitch);
+    let cam = savedGame.camera;
+    camera.setPosition(cam.x, cam.y, cam.z);
+    camera.setSYP(cam.speed, cam.yaw, cam.pitch);
 
     // load Textures
     let textures = {}
@@ -246,21 +268,33 @@ function loadGame(savedGame) {
     }
 }
 
+var saveFile;
+window.onLoadPage = function() {
+    saveFile = require('../saves/saves.json');
+    let select = document.getElementById('saves');
+
+    for (let save in saveFile) {
+        if (save === 'newGame') {
+            continue;
+        }
+
+        let opt = document.createElement('option');
+        opt.value = save;
+        opt.text = save;
+        select.add(opt);
+    }
+
+    // Loading new Game
+    window.onLoadClick();
+}
+
 window.onSaveClick = function() {
 
 }
 
-var saveFile;
 window.onLoadClick = function() {
-    let saveName = document.getElementById('saveName').value;
-
-    if (saveName === '') {
-        saveName = 'newGame';
-    }
-
-    if (saveFile === undefined) {
-        saveFile = require('../saves/saves.json');
-    }
+    let select = document.getElementById('saves');
+    let saveName = select.options[select.selectedIndex].value;
 
     loadGame(saveFile[saveName]);
 }
@@ -344,6 +378,4 @@ window.onmousemove = function(event) {
     // change camera matrix on mouse move
 };
 
-// Loading new Game
-window.onLoadClick();
 render();

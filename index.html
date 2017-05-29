@@ -67,12 +67,16 @@
 			}
         </script>
     </head>
-    <body>
+    <body onload="window.onLoadPage()">
         <canvas id="webgl-canvas" style="border:none;"></canvas>
         <div id="ui" class="scroll">
-            <input type="text" id="saveName" size="20" placeholder="Save Name" value="newGame">
-            <button id="btn_save">Save</button>
+            <select id="saves">
+                <option value="newGame" selected>newGame</option>
+            </select>
             <button id="btn_load" onclick="window.onLoadClick()">Load</button>
+            <br>
+            <input type="text" id="saveName" size="20" placeholder="Save Name">
+            <button id="btn_save">Save</button>
             <br>
             <label>Ambient Color [R, G, B]: </label>
             <input type="text" id="ambientR" size="3" placeholder="R" value="">

@@ -427,15 +427,7 @@ window.toggleUI = function() {
     }
 }
 
-document.getElementById('ambientR').oninput = () => {
-    ambientLight.updateAmbientLightUniform();
-}
-
-document.getElementById('ambientG').oninput = () => {
-    ambientLight.updateAmbientLightUniform();
-}
-
-document.getElementById('ambientB').oninput = () => {
+document.getElementById('rgbAmb').oninput = () => {
     ambientLight.updateAmbientLightUniform();
 }
 

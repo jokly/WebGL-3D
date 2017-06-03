@@ -22,17 +22,17 @@ class LightingDirection {
     }
 
     getRGB() {
-        let r = parseFloat(document.getElementById('directionR').value);
-        let g = parseFloat(document.getElementById('directionG').value);
-        let b = parseFloat(document.getElementById('directionB').value);
+        let r = parseFloat(document.getElementById('directionR').value) / 255;
+        let g = parseFloat(document.getElementById('directionG').value) / 255;
+        let b = parseFloat(document.getElementById('directionB').value) / 255;
 
         return {r, g, b};
     }
 
     setRGB(r, g, b) {
-        document.getElementById('directionR').value = r;
-        document.getElementById('directionG').value = g;
-        document.getElementById('directionB').value = b;
+        document.getElementById('directionR').value = r / 255;
+        document.getElementById('directionG').value = g / 255;
+        document.getElementById('directionB').value = b / 255;
 
         this.updateColor();
     }

@@ -18,6 +18,10 @@ img {
     -webkit-user-select: none;
 }
 
+input[type="range"] {
+    width: 100px;
+}
+
 #webgl-canvas {
     display: block;
     position: absolute;

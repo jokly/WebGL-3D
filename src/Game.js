@@ -37,6 +37,9 @@ let pipeline = new Pipeline();
 pipeline.setPerspective(canvas.width, canvas.height);
 renderer.setPipeline(pipeline);
 
+let textures = {};
+let shapes = [];
+
 function render() {
     window.requestAnimFrame(render);
     handleKeys();
@@ -149,9 +152,17 @@ document.onkeyup = function(e) {
     currentlyPressedKeys[e.keyCode] = false;
 
     if (e.keyCode == 32) {
-        renderer.addGeometry(new Cube(glContext, cubeTex,
+        renderer.addGeometry(new Cube(glContext, textures.cubeTex,
             {translate: getSpawnPosition(),
             isCollided: true}).geometry);
+
+        shapes.push({
+            type: 'Cube',
+            texture: 'cubeTex',
+            translate: getSpawnPosition(),
+            scale: [1, 1, 1],
+            isCollided: true,
+        });
     }
 
     if (e.keyCode == 76) {
@@ -220,8 +231,69 @@ function checkCollision(point) {
     return false;
 }
 
-function saveGame(saveName) {
+let storage = localStorage;
 
+function saveGame(saveName) {
+    let savedGame = {};
+
+    // save Camera
+    let camPos = camera.getPosition();
+    let camSYP = camera.getSYP();
+    savedGame['camera'] = {};
+    savedGame.camera.x = camPos.x;
+    savedGame.camera.y = camPos.y;
+    savedGame.camera.z = camPos.z;
+    savedGame.camera.speed = camSYP.speed;
+    savedGame.camera.yaw = camSYP.yaw;
+    savedGame.camera.pitch = camSYP.pitch;
+
+    // save Textures
+    savedGame['textures'] = [];
+    for (let key in textures) {
+        let tex = {};
+        tex.name = key;
+        tex.path = textures[key].getPath();
+        savedGame.textures.push(tex);
+    }
+
+    // save Shapes
+    savedGame['shapes'] = shapes;
+
+    // save Ambient Light
+    let ambLight = ambientLight.getRGB();
+    savedGame['ambientLight'] = {
+        r: ambLight.r,
+        g: ambLight.g,
+        b: ambLight.b,
+    };
+
+    // save Lighting Direction
+    let dirLightPos = lightingDirection.getDirection();
+    let dirLightRGB = lightingDirection.getRGB();
+
+    savedGame['lightingDirection'] = {
+        x: dirLightPos.x,
+        y: dirLightPos.y,
+        z: dirLightPos.z,
+        r: dirLightRGB.r,
+        g: dirLightRGB.g,
+        b: dirLightRGB.b,
+    };
+
+    // save Point Lights
+    savedGame['pointLights'] = [];
+    for (let l of pointLights.getLights()) {
+        savedGame.pointLights.push({
+            x: l.pos[0],
+            y: l.pos[1],
+            z: l.pos[2],
+            r: l.color[0],
+            g: l.color[1],
+            b: l.color[2],
+        });
+    }
+
+    storage.setItem(saveName, JSON.stringify(savedGame));
 }
 
 function loadGame(savedGame) {
@@ -234,12 +306,14 @@ function loadGame(savedGame) {
     camera.setSYP(cam.speed, cam.yaw, cam.pitch);
 
     // load Textures
-    let textures = {}
+    textures = {};
     for (let texture of savedGame.textures) {
         textures[texture.name] = new Texture(glContext, texture.path);
     }
 
     // load Objects
+    shapes = [];
+    renderer.clearGeometries();
     for (let shape of savedGame.shapes) {
         switch (shape.type) {
             case 'Floor':
@@ -251,6 +325,8 @@ function loadGame(savedGame) {
                     {translate: shape.translate, scale: shape.scale, isCollided: shape.isCollided}).geometry);
                 break;
         }
+
+        shapes.push(shape);
     }
 
     // load Ambient Light
@@ -268,35 +344,58 @@ function loadGame(savedGame) {
     }
 }
 
-var saveFile;
-window.onLoadPage = function() {
-    saveFile = require('../saves/saves.json');
-    let select = document.getElementById('saves');
+var saveFile = require('../saves/saves.json');
 
+function updateSaves() {
     for (let save in saveFile) {
-        if (save === 'newGame') {
-            continue;
+        if (storage.getItem(save) === null) {
+            storage.setItem(save, JSON.stringify(saveFile[save]));
         }
+    }
 
+    let select = document.getElementById('saves');
+    let selected;
+    if (select.selectedIndex != -1) {
+        selected = select.options[select.selectedIndex].value;
+    }
+
+    while (select.firstChild) {
+        select.removeChild(select.firstChild);
+    }
+
+    for (let save in storage) {
         let opt = document.createElement('option');
         opt.value = save;
         opt.text = save;
         select.add(opt);
     }
 
+    if (selected === undefined) {
+        selected = select.options[0].value;
+    }
+
+    select.value = selected;
+}
+
+window.onLoadPage = function() {
+    updateSaves();
+
     // Loading new Game
     window.onLoadClick();
 }
 
 window.onSaveClick = function() {
+    let saveName = document.getElementById('saveName').value;
 
+    saveGame(saveName);
+    updateSaves();
 }
 
 window.onLoadClick = function() {
     let select = document.getElementById('saves');
     let saveName = select.options[select.selectedIndex].value;
 
-    loadGame(saveFile[saveName]);
+    loadGame(JSON.parse(storage[saveName]));
 }
 
 window.uiMouseDown = function (keyCode) {

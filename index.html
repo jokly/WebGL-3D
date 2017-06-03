@@ -71,12 +71,11 @@
         <canvas id="webgl-canvas" style="border:none;"></canvas>
         <div id="ui" class="scroll">
             <select id="saves">
-                <option value="newGame" selected>newGame</option>
             </select>
             <button id="btn_load" onclick="window.onLoadClick()">Load</button>
             <br>
             <input type="text" id="saveName" size="20" placeholder="Save Name">
-            <button id="btn_save">Save</button>
+            <button id="btn_save" onclick="window.onSaveClick()">Save</button>
             <br>
             <label>Ambient Color [R, G, B]: </label>
             <input type="text" id="ambientR" size="3" placeholder="R" value="">

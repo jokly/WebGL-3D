@@ -92,6 +92,13 @@
                 "scale": [3, 3, 3],
                 "isCollided": true,
             },
+            {
+                "type": "Cube",
+                "texture": "cubeTex",
+                "translate": [3, 3, 3],
+                "scale": [3, 3, 3],
+                "isCollided": true,
+            },
         ],
         "ambientLight": {
             "r": 0.5,

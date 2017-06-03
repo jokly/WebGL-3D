@@ -35,6 +35,14 @@ class Camera {
         this.pitch = pitch;
     }
 
+    getSYP() {
+        return {
+            speed: this.speed,
+            yaw: this.yaw,
+            pitch: this.pitch,
+        }
+    }
+
     animate() {
         let timeNow = new Date().getTime();
 

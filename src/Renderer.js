@@ -58,6 +58,10 @@ class Renderer {
         return this.geometries;
     }
 
+    clearGeometries() {
+        this.geometries = [];
+    }
+
     render() {
         if (this.geometries.length === 0) {
             console.log('Cannot render: no geometry specified');

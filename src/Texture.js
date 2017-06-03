@@ -9,6 +9,7 @@ class Texture {
               new Uint8Array([0, 0, 255, 255]));
         this.image.onload = this.handleLoadedTexture;
         this.image.src = src;
+        this.path = src;
     }
 
     handleLoadedTexture() {
@@ -21,6 +22,10 @@ class Texture {
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA,
             this.gl.UNSIGNED_BYTE, this);
         this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+    }
+
+    getPath() {
+        return this.path;
     }
 }
 

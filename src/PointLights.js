@@ -27,6 +27,10 @@ class PointLights {
         return this.pointLights.length;
     }
 
+    getLights() {
+        return this.pointLights;
+    }
+
     clearLights() {
         for (let i = 0; i < this.pointLights.length; i++) {
             this.program.setUniform('pointLights[' + i + '].color', 'uniform3f',

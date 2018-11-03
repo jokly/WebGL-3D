@@ -1,5 +1,5 @@
 # Graphic library on WebGL
-## [Demo](https://jokly.github.io/WebGL_3D/)
+## [Demo](https://jokly.github.io/WebGL-3D/)
 ## How to build
 1. `npm run compile` - compile project
 2. `npm run debug` - compile project for debugging ES6
